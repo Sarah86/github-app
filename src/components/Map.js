@@ -1,59 +1,42 @@
 import React, { useEffect, useState } from "react";
-import { GoogleMap, withScriptjs, withGoogleMap, Marker } from "react-google-maps";
+import { GoogleMap, withScriptjs, withGoogleMap, Marker, InfoWindow } from "react-google-maps";
+import SearchBox from "react-google-maps/lib/components/places/SearchBox";
+
 
 const GoogleKey =  process.env.GOOGLE_MAPS_JAVASCRIPT_API_KEY;
 
 const Map = (props) => {
 
-  const [latitude, setLatitude] = useState(44.31771);
-  const [longitude, setLongitude] = useState(9.32241);
+  // const [latitude, setLatitude] = useState(44.31771);
+  // const [longitude, setLongitude] = useState(9.32241);
+  // // const [position, setPosition] = useState(0);
+  // const [content, setContent] = useState(null);
+  const [center, setCenter] = useState({
+    lat: 0,
+    lng: 0
+  });
 
   useEffect(() => {
-    const options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0
-    };
+    if (navigator.geolocation){
+      navigator.geolocation.getCurrentPosition((position) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+          };
+          setCenter(pos);
+        });        
+    } else {
+      alert('Sorry, I do not know where you are ;(')
+    }
+  }, [setCenter]);
 
-    
-  const success = (pos) => {
-    const crd = pos.coords;
-
-    console.log('Sua posição atual é:');
-    console.log('Latitude : ' + crd.latitude);
-    console.log('Longitude: ' + crd.longitude);
-    console.log('Mais ou menos ' + crd.accuracy + ' metros.');
-
-    const latitudeFromSuccess  = crd.latitude;
-    const longitudeFromSuccess  = crd.longitude;
-
-    setTimeout(() => {
-      setLatitude(latitudeFromSuccess);
-      setLongitude(longitudeFromSuccess);    
-    }, 3000);
-
-  }
-
-  const error = (err) => {
-    console.warn('ERROR(' + err.code + '): ' + err.message);
-  } 
-
-  navigator.geolocation.getCurrentPosition(success, error, options);
-  
-  });
 
   return(
       <GoogleMap 
-      defaultZoom={8}
-      defaultCenter={{
-        lat: latitude,
-        lng: longitude,
-      }}
+      defaultZoom={15}
+      center={center}
     >
-        {props.isMarkerShown && <Marker position={{ 
-         lat: latitude,
-         lng: longitude
-        }}   
+        {props.isMarkerShown && <Marker position={center}   
     />}
     </GoogleMap>
   )
