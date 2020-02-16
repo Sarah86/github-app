@@ -3,9 +3,11 @@ import axios from "axios" //Guaranteed compatibility between browsers
 
 const GitHub = () => {
 
-    const user = "Sarah86";
-    const repo = "cop";
-    const my_token = "3633af72eda1cb9816106830f0b22320a5028e45"
+    const [user, setUser] = useState("Sarah86");
+
+    const [repo, setRepo] = useState("github-app");
+
+    const my_token = "f6bb3326eca34b15c94d53eb7db931786b6f2469"
 
     const [commits, setCommits] = useState([]);
 
@@ -28,33 +30,45 @@ const GitHub = () => {
             })
     }
 
-
-    useEffect(() => {
-        async function getCommits() {
-            await axios.get(`https://api.github.com/repos/${user}/${repo}/commits`, {
-                'headers': {
-                    'Authorization': `token ${my_token}`
-                }
+    async function getCommits(user, repo) {
+        await axios.get(`https://api.github.com/repos/${user}/${repo}/commits`, {
+            'headers': {
+                'Authorization': `token ${my_token}`
+            }
+        })
+            .then(response => {
+                console.log(response);
+                setCommits(response.data);
             })
-                .then(response => {
-                    console.log(response);
-                    setCommits(response.data);
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        };
+            .catch(error => {
+                console.log(error)
+            })
+    };
 
+    function handleSubmit(event) {
+        event.preventDefault();
+        getCommits(user, repo);
+    }
 
-        getCommits();
+    
+    useEffect(() => {
+
 
     }, [])
 
     return (
         <div>
             <h1>Github</h1>
-            <h2>User: {user} </h2>
-            <h3>Repository: {repo} </h3>
+            <form onSubmit={handleSubmit}>
+                <label>User:
+                    <input type="text" value={user} onChange={(event) => setUser(event.target.value)}/>
+                </label>
+                <label>Repo:
+                    <input type="text" value={repo} onChange={(event) => setRepo(event.target.value)}/>
+                </label>
+                 <input type="submit" value="Enviar" />
+            </form>
+            
             <div>
                 {commits.map((commit, i) => (
                     <div key={i}>
@@ -78,7 +92,7 @@ const GitHub = () => {
                                     {
                                         (commit.sha === tree_sha.sha)
                                         &&
-                                        (tree_sha.tree.map(file => (
+                                        (tree_sha.tree.map((file,i) => (
                                             <li key={i}>{file.path}</li>
                                         )))
                                     }
