@@ -9,10 +9,12 @@ import React from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
 import { ThemeProvider } from 'styled-components'
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 
 import Header from "./header"
-import "./layout.css"
+// import "./layout.css"
 
 const theme = {
   spacing: 4,

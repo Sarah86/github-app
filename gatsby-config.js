@@ -1,11 +1,9 @@
- require("dotenv").config({
-    path: `.env.${process.env.NODE_ENV}`,
-  }),
+ require("dotenv").config();
 
 module.exports = {
   siteMetadata: {
     title: `Sarah Gonçalves for Hudl`,
-    description: `Simple web app to search some places nearby you using Google Maps`,
+    description: `Simple web app to search repos on Github`,
     author: `@Sarah86`,
   },
   plugins: [

@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios" //Guaranteed compatibility between browsers
+import { Form, Button, Card, Container, Jumbotron } from 'react-bootstrap'
 
 const GitHub = () => {
 
+    const [my_token, setMy_Token] = useState(`${process.env.GATSBY_GITHUB_TOKEN}`);
     const [user, setUser] = useState("Sarah86");
-
     const [repo, setRepo] = useState("github-app");
-
-    const my_token = "f6bb3326eca34b15c94d53eb7db931786b6f2469"
-
     const [commits, setCommits] = useState([]);
-
     const [tree_sha, setTree_sha] = useState("");
 
     function getTreeList(shaNumber) {
@@ -50,7 +47,7 @@ const GitHub = () => {
         getCommits(user, repo);
     }
 
-    
+
     useEffect(() => {
 
 
@@ -58,50 +55,76 @@ const GitHub = () => {
 
     return (
         <div>
-            <h1>Github</h1>
-            <form onSubmit={handleSubmit}>
-                <label>User:
-                    <input type="text" value={user} onChange={(event) => setUser(event.target.value)}/>
-                </label>
-                <label>Repo:
-                    <input type="text" value={repo} onChange={(event) => setRepo(event.target.value)}/>
-                </label>
-                 <input type="submit" value="Enviar" />
-            </form>
-            
-            <div>
-                {commits.map((commit, i) => (
-                    <div key={i}>
-                        <h3>Commit n° {i}</h3>
-                        <ul>
-                            <li>
-                                <strong>Author:</strong> {commit.commit.author.name}
-                            </li>
-                            <li>
-                                <strong>When:</strong> {commit.commit.author.date}</li>
-                            <li><strong>Message:</strong> {commit.commit.message}</li>
+            <Jumbotron fluid>
+            <Container>
+                <h1>Github data puller</h1>
+                <p>
+                This is a simple web app to pull data from Github repos.
+                </p>
+            </Container>
+            </Jumbotron>
+            <Container style={{marginBottom: '3em'}}>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group controlId="formBasicToken">
+                        <Form.Label>Token</Form.Label>
+                        <Form.Control type="text" value={my_token} onChange={(event) => setMy_Token(event.target.value)} placeholder="Enter your token" />
+                        <Form.Text className="text-muted">
+                            For use this app you have to get your token on <a href="https://github.com/settings/tokens" target="_blank">https://github.com/settings/tokens</a>
+                        </Form.Text>
+                    </Form.Group>
 
-                            <li>
-                                <strong>Sha:</strong> {commit.sha}
-                            </li>
-                            <li onClick={() => getTreeList(commit.sha)}
-                                style={{cursor: 'pointer'}}>
-                                <strong>Modified Files + </strong>
+                    <Form.Group controlId="formBasicUser">
+                        <Form.Label>User</Form.Label>
+                        <Form.Control type="text" value={user} onChange={(event) => setUser(event.target.value)} placeholder="The username you want to pull data" />
+                    </Form.Group>
+                    <Form.Group controlId="formBasicRepo">
+                        <Form.Label>Repository</Form.Label>
+                        <Form.Control type="text" value={repo} onChange={(event) => setRepo(event.target.value)} placeholder="Repository slug" />
+                    </Form.Group>
+                    <Button variant="primary" type="submit">
+                        Submit
+            </Button>
+                </Form>
+
+            </Container>
+
+
+            <Container>
+                {commits.map((commit, i) => (
+                    <Card key={i} style={{ marginBottom: '1em' }}>
+                        <Card.Header>Commit n° {i}</Card.Header>
+                        <Card.Body>
+                            <Card.Title>{commit.commit.author.name}</Card.Title>
+                            <Card.Text>
                                 <ul>
-                                    
-                                    {
-                                        (commit.sha === tree_sha.sha)
-                                        &&
-                                        (tree_sha.tree.map((file,i) => (
-                                            <li key={i}>{file.path}</li>
-                                        )))
-                                    }
+                                    <li>
+                                        <strong>When:</strong> {commit.commit.author.date}</li>
+                                    <li><strong>Message:</strong> {commit.commit.message}</li>
+
+                                    <li>
+                                        <strong>Sha:</strong> {commit.sha}
+                                    </li>
                                 </ul>
-                            </li>
-                        </ul>
-                    </div>
+                                <div>
+                                    <Button variant="primary"
+                                        onClick={() => getTreeList(commit.sha)}>Modified Files</Button>
+                                    <Container style={{ margin: '1em' }}>
+                                        <ul style={{ listStyle: 'circle' }}>
+                                            {
+                                                (commit.sha === tree_sha.sha)
+                                                &&
+                                                (tree_sha.tree.map((file, i) => (
+                                                    <li key={i}>{file.path}</li>
+                                                )))
+                                            }
+                                        </ul>
+                                    </Container>
+                                </div>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
                 ))}
-            </div>
+            </Container>
         </div>
 
     )
