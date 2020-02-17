@@ -59,7 +59,7 @@ const GitHub = () => {
             <Container>
                 <h1>Github data puller</h1>
                 <p>
-                This is a simple web app to pull data from Github repos.
+                This is a simple web app to pull data from a Github repo.
                 </p>
             </Container>
             </Jumbotron>
