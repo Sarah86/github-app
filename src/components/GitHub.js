@@ -23,7 +23,7 @@ const GitHub = () => {
                 // console.log(response.data)
             })
             .catch(error => {
-                console.log(error)
+                alert(error)
             })
     }
 
@@ -38,7 +38,8 @@ const GitHub = () => {
                 setCommits(response.data);
             })
             .catch(error => {
-                console.log(error)
+                console.log(error);
+                alert('Please check your inputs fields and try again')
             })
     };
 
