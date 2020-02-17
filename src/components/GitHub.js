@@ -20,7 +20,7 @@ const GitHub = () => {
             .then(response => {
                 const shaTree = response.data
                 setTree_sha(shaTree);
-                console.log(response.data)
+                // console.log(response.data)
             })
             .catch(error => {
                 console.log(error)
@@ -44,13 +44,17 @@ const GitHub = () => {
 
     function handleSubmit(event) {
         event.preventDefault();
-        getCommits(user, repo);
+        (my_token === "")
+        ? (alert("You have to insert the token"))
+        : (user === "") 
+        ? (alert('You have to insert an user'))
+        : repo === "" 
+        ? (alert('You have to insert a repository'))
+        :  getCommits(user, repo)
     }
 
 
     useEffect(() => {
-
-
     }, [])
 
     return (
@@ -59,7 +63,7 @@ const GitHub = () => {
             <Container>
                 <h1>Github data puller</h1>
                 <p>
-                This is a simple web app to pull data from a Github repo.
+                This is a simple web app that pulls data from Github and shows the last 30 commits from a repository.
                 </p>
             </Container>
             </Jumbotron>
@@ -72,7 +76,6 @@ const GitHub = () => {
                             For use this app you have to get your token on <a href="https://github.com/settings/tokens" target="_blank">https://github.com/settings/tokens</a>
                         </Form.Text>
                     </Form.Group>
-
                     <Form.Group controlId="formBasicUser">
                         <Form.Label>User</Form.Label>
                         <Form.Control type="text" value={user} onChange={(event) => setUser(event.target.value)} placeholder="The username you want to pull data" />
@@ -88,22 +91,22 @@ const GitHub = () => {
 
             </Container>
 
-
-            <Container>
+            {(commits.length == 0) 
+            ? null
+            : (
+                <Container>
+                <h2>Last 30 commits</h2>
                 {commits.map((commit, i) => (
                     <Card key={i} style={{ marginBottom: '1em' }}>
-                        <Card.Header>Commit n° {i}</Card.Header>
                         <Card.Body>
-                            <Card.Title>{commit.commit.author.name}</Card.Title>
-                            <Card.Text>
+                            <Card.Title>{commit.commit.message}</Card.Title>
                                 <ul>
                                     <li>
-                                        <strong>When:</strong> {commit.commit.author.date}</li>
-                                    <li><strong>Message:</strong> {commit.commit.message}</li>
-
-                                    <li>
-                                        <strong>Sha:</strong> {commit.sha}
+                                        <strong>Made by:</strong> {commit.commit.author.name}
                                     </li>
+                                    <li>
+                                        <strong>When:</strong> {commit.commit.author.date}</li>
+                                    <li><strong>Commit:</strong> {commit.sha}</li>
                                 </ul>
                                 <div>
                                     <Button variant="primary"
@@ -120,11 +123,11 @@ const GitHub = () => {
                                         </ul>
                                     </Container>
                                 </div>
-                            </Card.Text>
                         </Card.Body>
                     </Card>
                 ))}
             </Container>
+            )} 
         </div>
 
     )
