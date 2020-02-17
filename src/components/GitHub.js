@@ -9,6 +9,22 @@ const GitHub = () => {
     const [repo, setRepo] = useState("github-app");
     const [commits, setCommits] = useState([]);
     const [tree_sha, setTree_sha] = useState("");
+    const [tree_child, setTree_Child] = useState("");
+
+    function getChildTreeList(fetchURL) {
+        axios.get(`${fetchURL}`, {
+            'headers': {
+                'Authorization': `token ${my_token}`
+            }
+        })
+            .then(response => {
+                 console.log(response.data)
+                 setTree_Child(response.data);
+            })
+            .catch(error => {
+                alert(error)
+            })
+    }
 
     function getTreeList(shaNumber) {
 
@@ -20,7 +36,7 @@ const GitHub = () => {
             .then(response => {
                 const shaTree = response.data
                 setTree_sha(shaTree);
-                // console.log(response.data)
+                console.log(response.data)
             })
             .catch(error => {
                 alert(error)
@@ -118,7 +134,23 @@ const GitHub = () => {
                                                 (commit.sha === tree_sha.sha)
                                                 &&
                                                 (tree_sha.tree.map((file, i) => (
-                                                    <li key={i}>{file.path}</li>
+                                                    
+                                                        (file.type === "tree") 
+                                                        ? 
+                                                        (<li key={i} style={{cursor: 'pointer'}} onClick={() => getChildTreeList(file.url)}>
+                                                            <strong>{file.path} + </strong>
+                                                            <ul>                                                                
+                                                                {   
+                                                                    tree_child == "" || tree_child.url != file.url 
+                                                                    ? null
+                                                                    : tree_child.tree.map((file, i) => (<li key={i}>{file.path}</li>)) 
+                                                                    
+                                                                }
+                                                            </ul>
+                                                        </li>)
+                                                        : 
+                                                        (<li key={i}>{file.path}</li>)
+                                                    
                                                 )))
                                             }
                                         </ul>
