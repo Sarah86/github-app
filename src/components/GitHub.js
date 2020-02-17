@@ -4,7 +4,7 @@ import { Form, Button, Card, Container, Jumbotron } from 'react-bootstrap'
 
 const GitHub = () => {
 
-    const [my_token, setMy_Token] = useState(`${process.env.GATSBY_GITHUB_TOKEN}`);
+    const [my_token, setMy_Token] = useState("");
     const [user, setUser] = useState("Sarah86");
     const [repo, setRepo] = useState("github-app");
     const [commits, setCommits] = useState([]);
