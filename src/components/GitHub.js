@@ -103,7 +103,7 @@ const GitHub = () => {
                             <Card.Title>{commit.commit.message}</Card.Title>
                                 <ul>
                                     <li>
-                                        <strong>Made by:</strong> {commit.commit.author.name}
+                                        <strong>Author:</strong> {commit.commit.author.name}
                                     </li>
                                     <li>
                                         <strong>When:</strong> {commit.commit.author.date}</li>
