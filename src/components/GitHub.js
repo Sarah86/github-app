@@ -18,7 +18,7 @@ const GitHub = () => {
             }
         })
             .then(response => {
-                 console.log(response.data)
+                 //console.log(response.data)
                  setTree_Child(response.data);
             })
             .catch(error => {
@@ -36,7 +36,7 @@ const GitHub = () => {
             .then(response => {
                 const shaTree = response.data
                 setTree_sha(shaTree);
-                console.log(response.data)
+                //console.log(response.data)
             })
             .catch(error => {
                 alert(error)
@@ -108,7 +108,7 @@ const GitHub = () => {
 
             </Container>
 
-            {(commits.length == 0) 
+            {(commits.length === 0) 
             ? null
             : (
                 <Container>
@@ -141,7 +141,7 @@ const GitHub = () => {
                                                             <strong>{file.path} + </strong>
                                                             <ul>                                                                
                                                                 {   
-                                                                    tree_child == "" || tree_child.url != file.url 
+                                                                    tree_child === "" || tree_child.url !== file.url 
                                                                     ? null
                                                                     : tree_child.tree.map((file, i) => (<li key={i}>{file.path}</li>)) 
                                                                     
